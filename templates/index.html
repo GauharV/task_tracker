@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Task Tracker</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 1rem; }
+    h1   { color: #1e2235; }
+    form { display: flex; gap: .5rem; margin-bottom: 1rem; }
+    input[type="text"] { flex: 1; padding: .5rem .75rem; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
+    button { padding: .5rem 1.25rem; background: #3a6fd8; color: white; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; }
+    button:hover { background: #2a5abf; }
+    #error-msg { color: #c42b2b; font-weight: bold; margin-bottom: .75rem; }
+    #task-list  { list-style: none; padding: 0; }
+    #task-list li { display: flex; justify-content: space-between; align-items: center;
+                    padding: .6rem .9rem; border: 1px solid #dde2ee; border-radius: 6px;
+                    margin-bottom: .4rem; background: #f7f8fc; }
+    .del-btn { background: #e5534b; padding: .3rem .75rem; font-size: .85rem; }
+    .del-btn:hover { background: #c42b2b; }
+  </style>
+</head>
+<body>
+
+<h1>Task Tracker</h1>
+
+<!-- Error message — shown when task is empty -->
+{% if error %}
+  <p id="error-msg">{{ error }}</p>
+{% endif %}
+
+<!-- Add task form -->
+<form action="/add" method="post">
+  <input
+    type="text"
+    id="task-input"
+    name="task_title"
+    placeholder="Enter a task..."
+    aria-label="Task title"
+  />
+  <button type="submit" id="add-btn">Add Task</button>
+</form>
+
+<!-- Task list -->
+<ul id="task-list">
+  {% for task in tasks %}
+    <li>
+      <span>{{ task.title }}</span>
+      <form action="/delete/{{ task.id }}" method="post" style="margin:0">
+        <button
+          class="del-btn"
+          type="submit"
+          data-action="delete"
+          aria-label="Delete task: {{ task.title }}"
+        >Delete</button>
+      </form>
+    </li>
+  {% else %}
+    <li><em>No tasks yet. Add one above!</em></li>
+  {% endfor %}
+</ul>
+
+</body>
+</html>
